@@ -351,6 +351,14 @@
 
                 <div class="pricing-section">
                     <h2>🎯 Nos Formules</h2>
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <button onclick="testWhatsApp()" class="btn" style="background: #25D366; margin-bottom: 15px;">
+                            📱 Tester la connexion WhatsApp
+                        </button>
+                        <p style="color: white; font-size: 0.9rem;">
+                            Notre numéro WhatsApp : <strong>+229 01 44 24 25 28</strong>
+                        </p>
+                    </div>
                     <div class="pricing-cards">
                         <div class="pricing-card">
                             <h3>Abonnement Mensuel</h3>
@@ -647,8 +655,34 @@
             messageDiv.style.animation = 'fadeIn 0.5s ease-in';
         }
 
+        function testWhatsApp() {
+            const phoneNumber = "2290144242528";
+            const message = "Test de connexion OdiF SERVICE - Bonjour !";
+            
+            // Différents formats à tester
+            const testUrls = [
+                `https://wa.me/+${phoneNumber}?text=${encodeURIComponent(message)}`,
+                `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`,
+                `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(message)}`,
+                `https://web.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(message)}`
+            ];
+            
+            console.log("Tests des URLs WhatsApp:");
+            testUrls.forEach((url, index) => {
+                console.log(`${index + 1}. ${url}`);
+            });
+            
+            // Essayer la première URL
+            try {
+                window.open(testUrls[0], '_blank');
+            } catch (e) {
+                console.error("Erreur lors de l'ouverture de WhatsApp:", e);
+                alert(`Erreur de connexion WhatsApp. Veuillez contacter manuellement le +229 01 44 24 25 28`);
+            }
+        }
+
         function redirectToWhatsApp(service) {
-            const phoneNumber = "+2290144242528"; // Numéro WhatsApp OdiF SERVICE
+            const phoneNumber = "2290144242528"; // Numéro WhatsApp OdiF SERVICE (sans le +)
             let message = "";
             
             switch(service) {
@@ -671,8 +705,28 @@
                     message = "Bonjour ! Je m'intéresse aux services d'OdiF SERVICE.";
             }
             
-            const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-            window.open(url, '_blank');
+            // Essayer différents formats d'URL WhatsApp
+            const urls = [
+                `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`,
+                `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(message)}`,
+                `whatsapp://send?phone=${phoneNumber}&text=${encodeURIComponent(message)}`
+            ];
+            
+            // Tenter d'ouvrir WhatsApp
+            let success = false;
+            for (let url of urls) {
+                try {
+                    window.open(url, '_blank');
+                    success = true;
+                    break;
+                } catch (e) {
+                    console.log(`Échec avec ${url}:`, e);
+                }
+            }
+            
+            if (!success) {
+                alert(`Impossible d'ouvrir WhatsApp automatiquement. Veuillez contacter manuellement le ${phoneNumber} avec ce message:\n\n${message}`);
+            }
         }
 
         function showModal(service) {
@@ -712,7 +766,7 @@ Je souhaite finaliser mon inscription.`;
             
             // Redirection vers WhatsApp après 2 secondes
             setTimeout(() => {
-                const phoneNumber = "+2290144242528"; // Numéro WhatsApp OdiF SERVICE
+                const phoneNumber = "2290144242528"; // Numéro WhatsApp OdiF SERVICE (sans le +)
                 const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
                 window.open(url, '_blank');
             }, 2000);
